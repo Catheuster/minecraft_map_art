@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>title</title>
+    <script src="eel.js"></script>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Gerador PixelArt</h1>
+        <div class="elements">
+            <div>
+                <div class="input">
+                    <input type="text" id="url" name="url" placeholder="Url">
+                </div>
+                <div class="input">
+                    <input type="text" id="nome" name="nome" placeholder="Nome da Função">
+                </div>
+            </div>
+            <div>
+                <div class="input">
+                    <input type="number" id="largura" name="largura" placeholder="Largura">
+                </div>
+                <div class="input">
+                    <input type="number" id="altura" name="altura" placeholder="Altura">
+                </div>
+            </div>
+        </div>
+        <div class="button">
+            <button onclick="callPythonMakeArt()">Criar funcao</button>
+        </div>
+        <div class="loader">
+            <img hidden src="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif" alt="" id="loader">
+        </div>
+    </div>
+</body>
+</html>
