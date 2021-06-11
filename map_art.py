@@ -15,12 +15,13 @@ def create_map_art(altura,largura,url,name,slice):
         val = int(height/rate)
         new_img = im.resize((map_size[0],val))
     else:
-        rate = im.size[1]/map_size[0]
+        rate = im.size[1]/map_size[1]
         val = int(width/rate)
         new_img = im.resize((val,map_size[1]))
     width, height = new_img.size
     pixels = np.asarray(new_img)
 
+    new_img.save(name+".png")
     new_pixels = []
     block_pixels = []
     pixel_number = width*height
@@ -53,14 +54,17 @@ def create_map_art(altura,largura,url,name,slice):
 
     for i in range(len(block_pixels)):
         y = 128
+
         for j in range(len(block_pixels[0])):
             x = int(j/128)*largura*128 + i
             z = j%128
-            
-            if z != 0:
-                y = y + block_pixels[i][j]['heigh']
-            else:
-                y = 128
+                
+            if z == 0:
+                y = 128 - block_pixels[i][j]['heigh']
+                command = "fill ~{} {} ~{} ~{} {} ~{} {}".format(x,y,z-1,x,y,z-1,'grass_block')
+                datapack_function = datapack_function + "execute as @p at @p run {}\n".format(command)
+
+            y = y + block_pixels[i][j]['heigh']
 
             block = block_pixels[i][j]['block']
             command = "fill ~{} {} ~{} ~{} {} ~{} {}".format(x,y,z,x,y,z,block)
