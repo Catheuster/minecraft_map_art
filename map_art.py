@@ -1,6 +1,7 @@
 from mc_colors import McColors
 from PIL import Image
 import requests
+import numpy as np
 
 def create_map_art(altura,largura,url,name,slice):
     map_size = (largura*128,altura*128)
@@ -17,21 +18,47 @@ def create_map_art(altura,largura,url,name,slice):
         val = int(width/rate)
         new_img = im.resize((val,map_size[1]))
     width, height = new_img.size
-    new_img.save(name+".png")
-    pixels = list(new_img.getdata())
+    pixels = np.asarray(new_img)
 
-    for i in range(len(pixels)):
-        pixels[i] = mc_colors.cor_mais_proxima(pixels[i])
+    new_pixels = []
+    block_pixels = []
+    pixel_number = width*height
+    processed_pixels = 0
+    for i in range(width):
+        linha = []
+        linha_new_pixels = []
+        for j in range(height):
+            bloco = mc_colors.cor_mais_proxima(pixels[i][j])
+            linha.append(bloco)
+            linha_new_pixels.append(bloco['rgb'])
+            processed_pixels = processed_pixels+1
+            print('progresso = {}/{}'.format(processed_pixels,pixel_number))
+
+        new_pixels.append(linha_new_pixels)
+        block_pixels.append(linha)
+    
+    array = np.array(new_pixels)
+    new_img = Image.fromarray(array.astype(np.uint8))
+    new_img.save(name+".png")
     
     datapack_function = ""
     datapack_file = open(name+".mcfunction", "w")
 
-    for i in range(width):
+    block_pixels = np.transpose(block_pixels)
+
+    for i in range(len(block_pixels)):
         y = 128
-        for j in range(height):
-            y = y + pixels[width*i+j]['heigh']
-            block = pixels[width*j+i]['block']
-            command = "fill ~{} {} ~{} ~{} {} ~{} {}".format(i,y,j,i,y,j,block)
+        for j in range(len(block_pixels)):
+            x = int(j/128)*largura*128 + i
+            z = j%128
+            
+            if z != 0:
+                y = y + block_pixels[i][j]['heigh']
+            else:
+                y = 128
+
+            block = block_pixels[i][j]['block']
+            command = "fill ~{} {} ~{} ~{} {} ~{} {}".format(x,y,z,x,y,z,block)
             datapack_function = datapack_function + "execute as @p at @p run {}\n".format(command)
     
     datapack_file.write(datapack_function)
