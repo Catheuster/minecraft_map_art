@@ -2,6 +2,7 @@ from mc_colors import McColors
 from PIL import Image
 import requests
 import numpy as np
+import eel
 
 def create_map_art(altura,largura,url,name,slice):
     map_size = (largura*128,altura*128)
@@ -24,18 +25,22 @@ def create_map_art(altura,largura,url,name,slice):
     block_pixels = []
     pixel_number = width*height
     processed_pixels = 0
-    for i in range(width):
+
+    eel.setPercentageHidden(False)
+    for i in range(height):
         linha = []
         linha_new_pixels = []
-        for j in range(height):
+        for j in range(width):
             bloco = mc_colors.cor_mais_proxima(pixels[i][j])
             linha.append(bloco)
             linha_new_pixels.append(bloco['rgb'])
             processed_pixels = processed_pixels+1
-            print('progresso = {}/{}'.format(processed_pixels,pixel_number))
-
+            percentage = processed_pixels/pixel_number * 100
+            eel.setPercentageValue("{:.2f}%".format(percentage))
+    
         new_pixels.append(linha_new_pixels)
         block_pixels.append(linha)
+
     
     array = np.array(new_pixels)
     new_img = Image.fromarray(array.astype(np.uint8))
@@ -48,7 +53,7 @@ def create_map_art(altura,largura,url,name,slice):
 
     for i in range(len(block_pixels)):
         y = 128
-        for j in range(len(block_pixels)):
+        for j in range(len(block_pixels[0])):
             x = int(j/128)*largura*128 + i
             z = j%128
             
@@ -61,4 +66,5 @@ def create_map_art(altura,largura,url,name,slice):
             command = "fill ~{} {} ~{} ~{} {} ~{} {}".format(x,y,z,x,y,z,block)
             datapack_function = datapack_function + "execute as @p at @p run {}\n".format(command)
     
+    eel.setPercentageHidden(True)
     datapack_file.write(datapack_function)

@@ -18,3 +18,13 @@ function hideLoader(){
     var loader = document.getElementById("loader")
     loader.hidden = true
 }
+
+eel.expose(setPercentageHidden)
+function setPercentageHidden(value){
+    document.getElementById("percentage").hidden = value
+}
+
+eel.expose(setPercentageValue)
+function setPercentageValue(value){
+    document.getElementById("percentage").innerHTML = value
+}
