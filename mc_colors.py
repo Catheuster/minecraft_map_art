@@ -1,110 +1,218 @@
+from PIL import Image
+
 class McColors():
     def __init__(self):
-        self.colors = []
-        self.blocks = [
-            ('grass_block',(127, 178, 56)),
-            ('sandstone', (247,233,163)),
-            ('cobweb',(199,199,199)),
-            ('redstone_block',(255,0,0)),
-            ('ice',(160,160,255)),
-            ('iron_block',(167,167,167)),
-            ('melon',(0,124,0)),
-            ('snow_block',(255,255,255)),
-            ('clay',(164,168,184)),
-            ('jukebox',(151,109,77)),
-            ('stone',(122,122,122)),
-            ('oak_planks',(143,119,72)),
-            ('quartz_block',(255,252,245)),
-            ('acacia_planks',(216,127,51)),
-            ('magenta_wool',(178,76,216)),
-            ('light_blue_wool',(102,153,216)),
-            ('sponge',(229,229,51)),
-            ('lime_wool',(127,204,25)),
-            ('pink_wool',(242,127,165)),
-            ('gray_wool',(76,76,76)),
-            ('light_gray_wool',(153,153,153)),
-            ('cyan_wool',(76,127,153)),
-            ('purple_wool',(127,63,178)),
-            ('blue_wool',(51,76,178)),
-            ('dark_oak_planks',(102,76,51)),
-            ('green_wool',(102,127,51)),
-            ('red_wool',(153,51,51)),
-            ('black_wool',(25,25,25)),
-            ('gold_block',(250,238,77)),
-            ('diamond_block',(92,219,213)),
-            ('lapis_block',(74,128,255)),
-            ('emerald_block',(0,217,58)),
-            ('spruce_planks',(129,86,49)),
-            ('netherrack',(122,2,0)),
-            ('white_terracotta',(209,177,161)),
-            ('orange_terracotta',(159,82,36)),
-            ('magenta_terracotta',(149,87,108)),
-            ('light_blue_terracotta',(112,108,138)),
-            ('yellow_terracotta',(186,133,36)),
-            ('lime_terracotta',(103,117,53)),
-            ('pink_terracotta',(160,77,78)),
-            ('gray_terracotta',(57,41,35)),
-            ('light_gray_terracotta',(135,107,98)),
-            ('cyan_terracotta',(87,92,92)),
-            ('purple_terracotta',(122,73,88)),
-            ('blue_terracotta',(76,62,92)),
-            ('brown_terracotta',(76,50,35)),
-            ('green_terracotta',(76,82,42)),
-            ('red_terracotta',(142,60,46)),
-            ('black_terracotta',(37,22,16)),
-            ('crimson_nylium',(189,48,49)),
-            ('crimson_stem',(148,63,97)),
-            ('crimson_hyphae',(92,25,29)),
-            ('warped_nylium',(22,126,134)),
-            ('warped_stem',(58,142,140)),
-            ('warped_hyphae',(86,44,62)),
-            ('warped_wart_block',(20,180,133))
+        self.palette_data = [89, 125, 39, 109, 153, 48, 127, 178, 56, 174, 164, 115, 213, 201, 140, 247, 233, 163, 140, 140, 140, 171, 171, 171,
+         199, 199, 199, 180, 0, 0, 220, 0, 0, 255, 0, 0, 112, 112, 180, 138, 138, 220, 160, 160, 255, 117, 117, 117, 144, 144, 144, 167, 167, 
+         167, 0, 87, 0, 0, 106, 0, 0, 124, 0, 180, 180, 180, 220, 220, 220, 255, 255, 255, 115, 118, 129, 141, 144, 158, 164, 168, 184, 106, 
+         76, 54, 130, 94, 66, 151, 109, 77, 86, 86, 86, 105, 105, 105, 122, 122, 122, 100, 84, 50, 123, 102, 62, 143, 119, 72, 180, 177, 172, 
+         220, 217, 211, 255, 252, 245, 152, 89, 36, 186, 109, 44, 216, 127, 51, 125, 53, 152, 153, 65, 186, 178, 76, 216, 72, 108, 152, 88, 132, 
+         186, 102, 153, 216, 161, 161, 36, 197, 197, 44, 229, 229, 51, 89, 144, 17, 109, 176, 21, 127, 204, 25, 170, 89, 116, 208, 109, 142, 242, 
+         127, 165, 53, 53, 53, 65, 65, 65, 76, 76, 76, 108, 108, 108, 132, 132, 132, 153, 153, 153, 53, 89, 108, 65, 109, 132, 76, 127, 153, 89, 
+         44, 125, 109, 54, 153, 127, 63, 178, 36, 53, 125, 44, 65, 153, 51, 76, 178, 72, 53, 36, 88, 65, 44, 102, 76, 51, 72, 89, 36, 88, 109, 44, 
+         102, 127, 51, 108, 36, 36, 132, 44, 44, 153, 51, 51, 17, 17, 17, 21, 21, 21, 25, 25, 25, 176, 168, 54, 215, 205, 66, 250, 238, 77, 64, 
+         154, 150, 79, 188, 183, 92, 219, 213, 52, 90, 180, 63, 110, 220, 74, 128, 255, 0, 153, 40, 0, 187, 50, 0, 217, 58, 91, 60, 34, 111, 74, 
+         42, 129, 86, 49, 86, 1, 0, 105, 1, 0, 122, 2, 0, 147, 124, 113, 180, 152, 138, 209, 177, 161, 112, 57, 25, 137, 70, 31, 159, 82, 36, 105, 
+         61, 76, 128, 75, 93, 149, 87, 108, 79, 76, 97, 96, 93, 119, 112, 108, 138, 131, 93, 25, 160, 114, 31, 186, 133, 36, 72, 82, 37, 88, 100, 
+         45, 103, 117, 53, 112, 54, 55, 138, 66, 67, 160, 77, 78, 40, 28, 24, 49, 35, 30, 57, 41, 35, 95, 75, 69, 116, 92, 84, 135, 107, 98, 61, 64, 
+         64, 75, 79, 79, 87, 92, 92, 86, 51, 62, 105, 62, 75, 122, 73, 88, 53, 43, 64, 65, 53, 79, 76, 62, 92, 53, 35, 24, 65, 43, 30, 76, 50, 35, 
+         53, 57, 29, 65, 70, 36, 76, 82, 42, 100, 42, 32, 122, 51, 39, 142, 60, 46, 26, 15, 11, 31, 18, 13, 37, 22, 16, 133, 33, 34, 163, 41, 42, 
+         189, 48, 49, 104, 44, 68, 127, 54, 83, 148, 63, 97, 64, 17, 20, 79, 21, 25, 92, 25, 29, 15, 88, 94, 18, 108, 115, 22, 126, 134, 40, 100, 
+         98, 50, 122, 120, 58, 142, 140, 60, 31, 43, 74, 37, 53, 86, 44, 62, 14, 127, 93, 17, 155, 114, 20, 180, 133 , 20, 180, 133, 20, 180, 133,
+         20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133,
+         20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133,
+         20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133,
+         20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133,
+         20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133,
+         20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133,
+         20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133,
+         20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133, 20, 180, 133,
+         20, 180, 133, 20, 180, 133, 20, 180, 133]
+        
+        self.colors = [
+            {'block':'grass_block', 'heigh':-1},
+            {'block':'grass_block', 'heigh':0},
+            {'block':'grass_block', 'heigh':1},
+            {'block':'sandstone', 'heigh':-1},
+            {'block':'sandstone', 'heigh':0},
+            {'block':'sandstone', 'heigh':1},
+            {'block':'cobweb', 'heigh':-1},
+            {'block':'cobweb', 'heigh':0},
+            {'block':'cobweb', 'heigh':1},
+            {'block':'redstone_block', 'heigh':-1},
+            {'block':'redstone_block', 'heigh':0},
+            {'block':'redstone_block', 'heigh':1},
+            {'block':'ice', 'heigh':-1},
+            {'block':'ice', 'heigh':0},
+            {'block':'ice', 'heigh':1},
+            {'block':'iron_block', 'heigh':-1},
+            {'block':'iron_block', 'heigh':0},
+            {'block':'iron_block', 'heigh':1},
+            {'block':'melon', 'heigh':-1},
+            {'block':'melon', 'heigh':0},
+            {'block':'melon', 'heigh':1},
+            {'block':'snow_block', 'heigh':-1},
+            {'block':'snow_block', 'heigh':0},
+            {'block':'snow_block', 'heigh':1},
+            {'block':'clay', 'heigh':-1},
+            {'block':'clay', 'heigh':0},
+            {'block':'clay', 'heigh':1},
+            {'block':'jukebox', 'heigh':-1},
+            {'block':'jukebox', 'heigh':0},
+            {'block':'jukebox', 'heigh':1},
+            {'block':'stone', 'heigh':-1},
+            {'block':'stone', 'heigh':0},
+            {'block':'stone', 'heigh':1},
+            {'block':'oak_planks', 'heigh':-1},
+            {'block':'oak_planks', 'heigh':0},
+            {'block':'oak_planks', 'heigh':1},
+            {'block':'quartz_block', 'heigh':-1},
+            {'block':'quartz_block', 'heigh':0},
+            {'block':'quartz_block', 'heigh':1},
+            {'block':'acacia_planks', 'heigh':-1},
+            {'block':'acacia_planks', 'heigh':0},
+            {'block':'acacia_planks', 'heigh':1},
+            {'block':'magenta_wool', 'heigh':-1},
+            {'block':'magenta_wool', 'heigh':0},
+            {'block':'magenta_wool', 'heigh':1},
+            {'block':'light_blue_wool', 'heigh':-1},
+            {'block':'light_blue_wool', 'heigh':0},
+            {'block':'light_blue_wool', 'heigh':1},
+            {'block':'sponge', 'heigh':-1},
+            {'block':'sponge', 'heigh':0},
+            {'block':'sponge', 'heigh':1},
+            {'block':'lime_wool', 'heigh':-1},
+            {'block':'lime_wool', 'heigh':0},
+            {'block':'lime_wool', 'heigh':1},
+            {'block':'pink_wool', 'heigh':-1},
+            {'block':'pink_wool', 'heigh':0},
+            {'block':'pink_wool', 'heigh':1},
+            {'block':'gray_wool', 'heigh':-1},
+            {'block':'gray_wool', 'heigh':0},
+            {'block':'gray_wool', 'heigh':1},
+            {'block':'light_gray_wool', 'heigh':-1},
+            {'block':'light_gray_wool', 'heigh':0},
+            {'block':'light_gray_wool', 'heigh':1},
+            {'block':'cyan_wool', 'heigh':-1},
+            {'block':'cyan_wool', 'heigh':0},
+            {'block':'cyan_wool', 'heigh':1},
+            {'block':'purple_wool', 'heigh':-1},
+            {'block':'purple_wool', 'heigh':0},
+            {'block':'purple_wool', 'heigh':1},
+            {'block':'blue_wool', 'heigh':-1},
+            {'block':'blue_wool', 'heigh':0},
+            {'block':'blue_wool', 'heigh':1},
+            {'block':'dark_oak_planks', 'heigh':-1},
+            {'block':'dark_oak_planks', 'heigh':0},
+            {'block':'dark_oak_planks', 'heigh':1},
+            {'block':'green_wool', 'heigh':-1},
+            {'block':'green_wool', 'heigh':0},
+            {'block':'green_wool', 'heigh':1},
+            {'block':'red_wool', 'heigh':-1},
+            {'block':'red_wool', 'heigh':0},
+            {'block':'red_wool', 'heigh':1},
+            {'block':'black_wool', 'heigh':-1},
+            {'block':'black_wool', 'heigh':0},
+            {'block':'black_wool', 'heigh':1},
+            {'block':'gold_block', 'heigh':-1},
+            {'block':'gold_block', 'heigh':0},
+            {'block':'gold_block', 'heigh':1},
+            {'block':'diamond_block', 'heigh':-1},
+            {'block':'diamond_block', 'heigh':0},
+            {'block':'diamond_block', 'heigh':1},
+            {'block':'lapis_block', 'heigh':-1},
+            {'block':'lapis_block', 'heigh':0},
+            {'block':'lapis_block', 'heigh':1},
+            {'block':'emerald_block', 'heigh':-1},
+            {'block':'emerald_block', 'heigh':0},
+            {'block':'emerald_block', 'heigh':1},
+            {'block':'spruce_planks', 'heigh':-1},
+            {'block':'spruce_planks', 'heigh':0},
+            {'block':'spruce_planks', 'heigh':1},
+            {'block':'netherrack', 'heigh':-1},
+            {'block':'netherrack', 'heigh':0},
+            {'block':'netherrack', 'heigh':1},
+            {'block':'white_terracotta', 'heigh':-1},
+            {'block':'white_terracotta', 'heigh':0},
+            {'block':'white_terracotta', 'heigh':1},
+            {'block':'orange_terracotta', 'heigh':-1},
+            {'block':'orange_terracotta', 'heigh':0},
+            {'block':'orange_terracotta', 'heigh':1},
+            {'block':'magenta_terracotta', 'heigh':-1},
+            {'block':'magenta_terracotta', 'heigh':0},
+            {'block':'magenta_terracotta', 'heigh':1},
+            {'block':'light_blue_terracotta', 'heigh':-1},
+            {'block':'light_blue_terracotta', 'heigh':0},
+            {'block':'light_blue_terracotta', 'heigh':1},
+            {'block':'yellow_terracotta', 'heigh':-1},
+            {'block':'yellow_terracotta', 'heigh':0},
+            {'block':'yellow_terracotta', 'heigh':1},
+            {'block':'lime_terracotta', 'heigh':-1},
+            {'block':'lime_terracotta', 'heigh':0},
+            {'block':'lime_terracotta', 'heigh':1},
+            {'block':'pink_terracotta', 'heigh':-1},
+            {'block':'pink_terracotta', 'heigh':0},
+            {'block':'pink_terracotta', 'heigh':1},
+            {'block':'gray_terracotta', 'heigh':-1},
+            {'block':'gray_terracotta', 'heigh':0},
+            {'block':'gray_terracotta', 'heigh':1},
+            {'block':'light_gray_terracotta', 'heigh':-1},
+            {'block':'light_gray_terracotta', 'heigh':0},
+            {'block':'light_gray_terracotta', 'heigh':1},
+            {'block':'cyan_terracotta', 'heigh':-1},
+            {'block':'cyan_terracotta', 'heigh':0},
+            {'block':'cyan_terracotta', 'heigh':1},
+            {'block':'purple_terracotta', 'heigh':-1},
+            {'block':'purple_terracotta', 'heigh':0},
+            {'block':'purple_terracotta', 'heigh':1},
+            {'block':'blue_terracotta', 'heigh':-1},
+            {'block':'blue_terracotta', 'heigh':0},
+            {'block':'blue_terracotta', 'heigh':1},
+            {'block':'brown_terracotta', 'heigh':-1},
+            {'block':'brown_terracotta', 'heigh':0},
+            {'block':'brown_terracotta', 'heigh':1},
+            {'block':'green_terracotta', 'heigh':-1},
+            {'block':'green_terracotta', 'heigh':0},
+            {'block':'green_terracotta', 'heigh':1},
+            {'block':'red_terracotta', 'heigh':-1},
+            {'block':'red_terracotta', 'heigh':0},
+            {'block':'red_terracotta', 'heigh':1},
+            {'block':'black_terracotta', 'heigh':-1},
+            {'block':'black_terracotta', 'heigh':0},
+            {'block':'black_terracotta', 'heigh':1},
+            {'block':'crimson_nylium', 'heigh':-1},
+            {'block':'crimson_nylium', 'heigh':0},
+            {'block':'crimson_nylium', 'heigh':1},
+            {'block':'crimson_stem', 'heigh':-1},
+            {'block':'crimson_stem', 'heigh':0},
+            {'block':'crimson_stem', 'heigh':1},
+            {'block':'crimson_hyphae', 'heigh':-1},
+            {'block':'crimson_hyphae', 'heigh':0},
+            {'block':'crimson_hyphae', 'heigh':1},
+            {'block':'warped_nylium', 'heigh':-1},
+            {'block':'warped_nylium', 'heigh':0},
+            {'block':'warped_nylium', 'heigh':1},
+            {'block':'warped_stem', 'heigh':-1},
+            {'block':'warped_stem', 'heigh':0},
+            {'block':'warped_stem', 'heigh':1},
+            {'block':'warped_hyphae', 'heigh':-1},
+            {'block':'warped_hyphae', 'heigh':0},
+            {'block':'warped_hyphae', 'heigh':1},
+            {'block':'warped_wart_block', 'heigh':-1},
+            {'block':'warped_wart_block', 'heigh':0},
+            {'block':'warped_wart_block', 'heigh':1},
         ]
-
-        for block in self.blocks:
-            bright_rgb = block[1]
-            dark_rgb = (int(bright_rgb[0]*180/255),int(bright_rgb[1]*180/255),int(bright_rgb[2]*180/255))
-            neutral_rgb = (int(bright_rgb[0]*220/255),int(bright_rgb[1]*220/255),int(bright_rgb[2]*220/255))
-            color = {
-                'block': block[0],
-                'rgb': dark_rgb,
-                'heigh': -1
-            }
-            self.colors.append(color)
-            color = {
-                'block': block[0],
-                'rgb': neutral_rgb,
-                'heigh': 0
-            }
-            self.colors.append(color)
-            color = {
-                'block': 'minecraft:'+block[0],
-                'rgb': bright_rgb,
-                'heigh': 1
-            }
-            self.colors.append(color)
     
-    @staticmethod
-    def dist(cor1, cor2):
-        r_linha = cor1[0] - cor2[0]
-        r = cor1[0] - cor2[0]
-        g = cor1[1] - cor2[1]
-        b = cor1[2] - cor2[2]
-        return ((2 + r_linha/256) * r**2) +( 4 * g**2) + ((2 + (255-r_linha)/256) * b**2)
+    def image_in_palette(self, image, dither):
+        if dither:
+            doDither = 1
+        else:
+            doDither = 0
+        palette_img = Image.new('P', (171, 1))
+        palette_img.putpalette(self.palette_data)
+        
+        image.load()
+        palette_img.load()
 
-
-    def cor_mais_proxima(self, cor):
-        menor_distancia = -1
-        cor_mais_proxima = None
-        for color in self.colors:
-            distancia = McColors.dist(cor,color['rgb'])
-            if cor_mais_proxima is None:
-                cor_mais_proxima = color
-                menor_distancia = distancia
-                continue
-            
-            if distancia < menor_distancia:
-                menor_distancia = distancia
-                cor_mais_proxima = color
-
-        return cor_mais_proxima
+        im = image.im.convert("P", doDither, palette_img.im)
+        return image._new(im)

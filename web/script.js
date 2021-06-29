@@ -6,11 +6,12 @@ function callPythonMakeArt(){
     var loader = document.getElementById("loader")
     loader.hidden = false
     var text = document.getElementById("url").value
-    var l = document.getElementById("altura").value
-    var a = document.getElementById("largura").value
+    var a = document.getElementById("altura").value
+    var l = document.getElementById("largura").value
     var nome = document.getElementById("nome").value
+    var dither = document.getElementById("dithering").checked
 
-    eel.call_create_map(a,l,text,nome,false)
+    eel.call_create_map(a,l,text,nome,dither)
 }
 
 eel.expose(hideLoader)
