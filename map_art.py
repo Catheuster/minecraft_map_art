@@ -24,7 +24,8 @@ def create_map_art(altura,largura,url,name,dither):
 
     for linha_mapa in range(altura):
         for coluna_mapa in range(largura):
-            map_name = name + str(linha_mapa) + '_' + str(coluna_mapa)
+            numero_mapa = largura * linha_mapa + coluna_mapa
+            map_name = name + '_' + str(numero_mapa)
 
             range_x,range_y = 128,128
             if(coluna_mapa == largura-1 and width%128 != 0):
@@ -36,7 +37,7 @@ def create_map_art(altura,largura,url,name,dither):
             cropped_image.save(map_name+ ".png")
             block_pixels, processed_pixels = get_block_pixels(cropped_image, range_x, range_y, processed_pixels, pixel_number)
 
-            write_mcfunction(block_pixels, map_name, largura)
+            write_mcfunction(block_pixels, map_name)
 
     eel.setPercentageHidden(True)
 
@@ -74,15 +75,15 @@ def get_block_pixels(cropped_image,range_x,range_y, processed_pixels, pixel_numb
     block_pixels = np.transpose(block_pixels)
     return block_pixels ,processed_pixels
 
-def write_mcfunction(block_pixels, map_name, largura):
+def write_mcfunction(block_pixels, map_name):
     datapack_function = ""
     datapack_file = open(map_name+".mcfunction", "w")
     for i in range(len(block_pixels)):
         y = 128
 
         for j in range(len(block_pixels[0])):
-            x = int(j/128)*largura*128 + i
-            z = j%128
+            x = i
+            z = j
 
             if z == 0:
                 y = 128 - block_pixels[i][j]['heigh']
