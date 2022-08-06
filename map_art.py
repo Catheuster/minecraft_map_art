@@ -1,5 +1,6 @@
 from mc_colors import McColors
 from PIL import Image
+from litemapy import Schematic, Region, BlockState
 from math import ceil
 import requests
 import numpy as np
@@ -38,6 +39,7 @@ def create_map_art(altura,largura,url,name,dither):
             block_pixels, processed_pixels = get_block_pixels(cropped_image, range_x, range_y, processed_pixels, pixel_number)
 
             write_mcfunction(block_pixels, map_name)
+            write_litematica(block_pixels, map_name)
 
     eel.setPercentageHidden(True)
 
@@ -97,3 +99,37 @@ def write_mcfunction(block_pixels, map_name):
             datapack_function = datapack_function + "execute as @p at @p run {}\n".format(command)
     
     datapack_file.write(datapack_function)
+
+
+def write_litematica(block_pixels, map_name):
+    range_max,range_min = map_art_y_range(block_pixels)
+    print(f'max:{range_max}, min:{range_min}')
+    reg = Region(0, 0, 0, 128, 1 + range_max - range_min, 129)
+    schem = reg.as_schematic(name=map_name, author="MapArt.py", description="Made with litemapy")
+    for i in range(len(block_pixels)):
+        y = -1 * range_min
+
+        for j in range(len(block_pixels[0])):
+            x = i
+            z = j+1
+
+            if z == 1:
+                # y = -1 * range_min - block_pixels[i][j]['heigh']
+                reg.setblock(x, y, z-1, BlockState("minecraft:grass_block"))
+
+            y = y + block_pixels[i][j]['heigh']
+            block = BlockState("minecraft:{}".format(block_pixels[i][j]['block']))
+            reg.setblock(x, y, z, block)
+    
+    schem.save("{}.litematic".format(map_name))
+
+
+def map_art_y_range(block_pixel):
+    line_y_max = []
+    line_y_min = []
+    for i in block_pixel:
+        cumsum = np.append(np.cumsum([j['heigh'] for j in i]), [0])
+        # print(cumsum)
+        line_y_max.append(max(cumsum))
+        line_y_min.append(min(cumsum))
+    return max(line_y_max),min(line_y_min)
